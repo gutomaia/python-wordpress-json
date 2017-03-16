@@ -232,8 +232,12 @@ class WordpressJsonWrapper(object):
         # filters
         url_params = dict()
         if kw.get('filter'):
-            for query_param, value in six.iteritems(kw.get('filter')):
-                url_params.update({'filter[%s]' % query_param: value})
+            for query_param, values in six.iteritems(kw.get('filter')):
+                if isinstance(values, list):
+                    for i, value in enumerate(values):
+                        url_params.update({'filter[%s][%s]' % (query_param, i): value})
+                else:
+                    url_params.update({'filter[%s]' % query_param: value})
 
         # url params
         if kw.get('params'):
